@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "shapes"
+		},
+		{
+			"path": "landscape"
+		},		
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}
