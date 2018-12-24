@@ -1,10 +1,10 @@
 /**
  * Plant generator as explained in the book:
- * Rashid, Tariq. Make Your Own Algorithmic Art 
+ * Rashid, Tariq. Make Your Own Algorithmic Art
+ * Added multicolored plants. 
  */
-
 var first=true;
-var multiple=true;
+var multiple=false;
 
 function setup() { 
   cnv = createCanvas(800, 600);
@@ -15,17 +15,18 @@ function setup() {
 } 
 
 function draw() { 
-  stroke(0, 250, 0, 100);
-  strokeWeight(2);
+   strokeWeight(2);
 
   if(multiple) {
     for(var y=180;y<600;y+=200) {
       for(var x=150;x<700;x+=240) {
+        stroke(random(255), random(255), random(255), 100);
         tree(x, y, random(-15,15), 6, 60);
       }
     } 
   }
   else {
+    stroke(random(255), random(255), random(255), 100);
     tree(400, 500, random(-15,15), 6, 140);
   }
  
