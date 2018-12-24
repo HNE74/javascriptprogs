@@ -3,8 +3,12 @@
  * Rashid, Tariq. Make Your Own Algorithmic Art 
  * Extended by sea level altitude feature.
  */
+
+var first=true;
+
 function setup() { 
-  createCanvas(1200, 600); 
+  cnv = createCanvas(1200, 600);
+  cnv.parent("sketchholder"); 
   background('grey'); 
   noLoop();
   colorMode(HSB); 
@@ -12,14 +16,18 @@ function setup() {
 
 function draw() { 
   noStroke(); 
-  fill(255, 0, 0, 50); // shift for each layer 
+  fill(255, 0, 0, 50);  
+  var xstart=50;
+  var xend=800;
+  var ystart=250;
+  var yend=600;
   var shift=0;
   var seaAltitude=70; 
   
   // layers downwards 
-  for (var y=300; y<=600; y+=1) { 
+  for (var y=ystart; y<=yend; y+=1) { 
     // peaks across 
-    for (var x=50; x<=800; x+=1) { 
+    for (var x=xstart; x<=xend; x+=1) { 
       var altitude=200*noise(x/200, y/200);
       altitude+=30*noise(x/30, y/30);
       if(altitude<seaAltitude) {  // Draw sea
@@ -34,4 +42,21 @@ function draw() {
     }
     shift+=1;
   }
+
+  if(first) {
+    first=false; 
+    redraw();
+  }  
+}
+
+function redrawCanvas() {
+  clear();
+  noiseSeed(random()*100);
+  background('grey');
+  first=true;
+  redraw();
+}
+
+function canvasToImage(path) {
+  saveCanvas(path, "jpg");
 }
