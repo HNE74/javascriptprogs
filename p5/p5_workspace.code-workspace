@@ -5,9 +5,12 @@
 		},
 		{
 			"path": "landscape"
-		},		
+		},
 		{
 			"path": "."
+		},
+		{
+			"path": "colors"
 		}
 	],
 	"settings": {}
