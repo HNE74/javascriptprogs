@@ -3,11 +3,18 @@
  * Rashid, Tariq. Make Your Own Algorithmic Art  
  */
 
-var stepSize=100;
-var turtleX=400;
-var turtleY=300;
+var startX=400;
+var startY=550;
+var startStepSize=100;
+var scaleFactor=0.5;
+ 
+var stepSize=-1;
+var turtleX=startX;
+var turtleY=startY;
 var turtleAngle=0;
 var notebook=[];
+var nextGenCode=['F','[','L','F',']','F','[','R','F',']'];
+var fCodeMutation=['F','[','R','F',']','F','[','L','F',']'];
   
 function setup() {
   createCanvas(800,600).parent("sketchholder"); 
@@ -19,25 +26,37 @@ function setup() {
 function draw() {  
   initVariables();
   stroke(255,0,0);
-  strokeWeight(4);
+  strokeWeight(1);
   
-  var code=['F', '[', 'R', 'F', ']', 'L', 'F'];
+  var code=nextGenCode;
+  nextGenCode=[];
   
   for(var instruction of code) {
     if(instruction=='F') {
 	  forward();
 	}
 	else if(instruction=='L') {
-	  leftTurn(90);
+	  leftTurn(30);
 	}
 	else if(instruction=='R') {
-	  rightTurn(90);
+	  rightTurn(30);
 	}
 	else if(instruction=='[') {
 	  pushNote();
 	}
 	else if(instruction==']') {
 	  popNote();
+	}
+  }
+
+  for(var instruction of code) {
+	if(instruction=='F') {
+	  for(var command of fCodeMutation) {
+	    nextGenCode.push(command);
+	  }
+	}
+	else {
+      nextGenCode.push(instruction);
 	}
   }
 }
@@ -72,16 +91,21 @@ function popNote() {
 }
 
 function initVariables() {
-  stepSize=100;
-  turtleX=400;
-  turtleY=300;
+  if(stepSize==-1) {
+    stepSize=startStepSize;
+  }
+  else {
+    stepSize=stepSize*scaleFactor;
+  }
+  
+  turtleX=startX;
+  turtleY=startY;
   turtleAngle=0;
   notebook=[];	
 }	
 
 function redrawCanvas() {
   clear();
-  noiseSeed(random()*100);
   background('white');
   redraw();
 }
