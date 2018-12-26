@@ -11,7 +11,11 @@
 		},
 		{
 			"path": "colors"
+		},
+		{
+			"path": "p5"
 		}
 	],
-	"settings": {}
+	"settings": {
+	}
 }
