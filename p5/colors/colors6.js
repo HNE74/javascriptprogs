@@ -1,7 +1,9 @@
 /**
- * Color expriments based on the book.
+ * Color experiments based on the book.
  * Rashid, Tariq. Make Your Own Algorithmic Art  
  */
+import 'p5/lib/p5.js';
+
 function setup() {
   createCanvas(800,600).parent("sketchholder"); 
   background('grey');

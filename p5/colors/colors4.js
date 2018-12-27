@@ -1,5 +1,5 @@
 /**
- * Color expriments based on the book.
+ * Color experiments based on the book.
  * Rashid, Tariq. Make Your Own Algorithmic Art  
  */
 function setup() {

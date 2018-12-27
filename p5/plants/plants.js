@@ -15,8 +15,8 @@ function setup() {
 } 
 
 function draw() { 
-   strokeWeight(2);
-
+  strokeWeight(2);
+  
   if(multiple) {
     for(var y=180;y<600;y+=200) {
       for(var x=150;x<700;x+=240) {

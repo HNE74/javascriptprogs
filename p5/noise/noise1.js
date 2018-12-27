@@ -1,5 +1,5 @@
 /**
- * Color expriments based on the book.
+ * Noise experiments based on the book.
  * Rashid, Tariq. Make Your Own Algorithmic Art  
  */
 function setup() {
@@ -14,10 +14,10 @@ function draw() {
 
   for(var x=200; x<=600; x+=1) { 
     for(var y=100; y<=500; y+=1) { 
-	  var c = noise(x/50, y/50)*255;
-	  stroke(c); 
-	  point(x, y); 
-	} 
+      var c = noise(x/50, y/50)*255;
+      stroke(c); 
+      point(x, y); 
+    } 
   }
 }
 

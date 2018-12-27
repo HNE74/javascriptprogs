@@ -14,6 +14,12 @@
 		},
 		{
 			"path": "p5"
+		},
+		{
+			"path": "noise"
+		},
+		{
+			"path": "plants"
 		}
 	],
 	"settings": {
