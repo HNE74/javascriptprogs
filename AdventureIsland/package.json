@@ -1,0 +1,16 @@
+{
+  "name": "adventureisland",
+  "version": "0.0.1",
+  "description": "Textadventure on an island",
+  "main": "adventureMain.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node adventureMain.js"
+  },
+  "author": "= <=> (=)",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.0.0",
+    "prompt": "^1.0.0"
+  }
+}
