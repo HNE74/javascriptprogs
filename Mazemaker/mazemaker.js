@@ -17,18 +17,29 @@ class Maze {
     }
 
     partialShowMaze(yPos, xPos, wHeight, wWidth) {
+        console.log(this.fetchBoxLine(wWidth, '\u2554', '\u2557'));
         let yNd = yPos;
         while(yNd < yPos+wHeight && yNd <= this.height+3) {
-            let rowtxt = "";
+            let rowtxt = '\u2551';
             let xNd = xPos;
             while(xNd < xPos+wWidth && xNd <= this.width+3) {
                 let val = this.maze[yNd][xNd];
                 rowtxt = rowtxt + this.fetchMazeChar(rowtxt, val, yNd, xNd);
                 xNd+=1;                
             }
-            console.log(rowtxt);
+            console.log(rowtxt + '\u2551');
             yNd+=1;
         }
+        console.log(this.fetchBoxLine(wWidth, '\u255A', '\u255D'));        
+    }
+
+    fetchBoxLine(bwidth, startChar, endChar) {
+        let line = startChar;
+        for(let c=0; c<bwidth; c++) {
+            line = line + '\u2550';
+        }
+        line = line + endChar;
+        return line;
     }
 
     fetchMazeChar(rowtxt, val, yNd, xNd) {
