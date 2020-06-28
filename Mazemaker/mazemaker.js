@@ -7,7 +7,13 @@ class Maze {
         this.height = height;
         this.holes = holes; 
         this.player = player;
-        this.createMaze();    
+        this.createMaze(); 
+        
+        this.symbol = {};
+        this.symbol.wall = '\u2593';
+        this.symbol.empty = ' ';
+        this.symbol.user = '\u263b';
+        this.symbol.unknown = '?';
     }
 
     partialShowMaze(yPos, xPos, wHeight, wWidth) {
@@ -17,24 +23,44 @@ class Maze {
             let xNd = xPos;
             while(xNd < xPos+wWidth && xNd <= this.width+3) {
                 let val = this.maze[yNd][xNd];
-                if(val === 1) {
-                    rowtxt = rowtxt + "#"
-                }
-                else if(val === 0 && (this.player === null || (this.player.getPosition().yp !== yNd || this.player.getPosition().xp !== xNd))) {
-                    rowtxt = rowtxt + " ";
-                }
-                else if(val === 0 && (this.player !== null && (this.player.getPosition().yp === yNd && this.player.getPosition().xp === xNd))) {
-                    rowtxt = rowtxt + "O";
-                }                
-                else {
-                    rowtxt = rowtxt + "?";
-                }
+                rowtxt = rowtxt + this.fetchMazeChar(rowtxt, val, yNd, xNd);
                 xNd+=1;                
             }
             console.log(rowtxt);
             yNd+=1;
         }
     }
+
+    fetchMazeChar(rowtxt, val, yNd, xNd) {
+        if(val === 1) {
+            rowtxt = this.symbol.wall;
+        }
+        else if(val === 0 && (this.player === null || (this.player.getPosition().yp !== yNd || this.player.getPosition().xp !== xNd))) {
+            rowtxt = this.symbol.empty;
+        }
+        else if(val === 0 && (this.player !== null && (this.player.getPosition().yp === yNd && this.player.getPosition().xp === xNd))) {
+            rowtxt = this.symbol.user;
+        }                
+        else {
+            rowtxt = this.symbol.unknown;
+        }
+
+        return rowtxt;
+    }
+
+    fetchMazeChar2(rowtxt, val) {
+        if(val === 1) {
+            rowtxt = this.symbol.wall;
+        }
+        else if(val === 0) {
+            rowtxt = this.symbol.empty;
+        }                
+        else {
+            rowtxt = this.symbol.unknown;
+        }
+
+        return rowtxt;
+    }    
 
     showMaze() {
         console.log("Width: %d, Height: %d, Holes: %d", this.width, this.height, this.holes);
@@ -43,18 +69,7 @@ class Maze {
             let rowtxt = "";
             let xp = 0;
             for(let col of row) {
-                if(col === 1) {
-                    rowtxt = rowtxt + "#"
-                }
-                else if(col === 0 && (this.player === null || (this.player.getPosition().yp !== yp || this.player.getPosition().xp !== xp))) {
-                    rowtxt = rowtxt + " ";
-                }
-                else if(col === 0 && (this.player !== null && (this.player.getPosition().yp === yp && this.player.getPosition().xp === xp))) {
-                    rowtxt = rowtxt + "O";
-                }                
-                else {
-                    rowtxt = rowtxt + "?";
-                }
+                rowtxt = rowtxt + this.fetchMazeChar2(rowtxt, col);
                 xp++;
             }
             yp++;
