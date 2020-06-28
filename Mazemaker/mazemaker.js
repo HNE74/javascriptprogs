@@ -17,7 +17,7 @@ class Maze {
     }
 
     partialShowMaze(yPos, xPos, wHeight, wWidth) {
-        console.log(this.fetchBoxLine(wWidth, '\u2554', '\u2557'));
+        console.log('   ' + this.fetchBoxLine(wWidth, '\u2554', '\u2557'));
         let yNd = yPos;
         while(yNd < yPos+wHeight && yNd <= this.height+3) {
             let rowtxt = '\u2551';
@@ -27,10 +27,10 @@ class Maze {
                 rowtxt = rowtxt + this.fetchMazeChar(rowtxt, val, yNd, xNd);
                 xNd+=1;                
             }
-            console.log(rowtxt + '\u2551');
+            console.log('   ' + rowtxt + '\u2551');
             yNd+=1;
         }
-        console.log(this.fetchBoxLine(wWidth, '\u255A', '\u255D'));        
+        console.log('   ' + this.fetchBoxLine(wWidth, '\u255A', '\u255D'));        
     }
 
     fetchBoxLine(bwidth, startChar, endChar) {
@@ -231,11 +231,12 @@ const mazedim = readMazeDimension();
 pl = new Player(2, 2);
 mz = new Maze(...Object.values(mazedim), pl);
 
-mz.showMaze();
+//mz.showMaze();
+console.clear();
 do {
-    console.log("\n\n=====================================");
+    process.stdout.write('\u001B[2;0H');
     mz.partialShowMaze(pl.getPosition().yp-2, pl.getPosition().xp-2, 5, 5);   
-    console.log("Player position: %s - %s", pl.getPosition().xp, pl.getPosition().yp);
+    console.log("\nPlayer position: %s - %s", pl.getPosition().xp, pl.getPosition().yp);
     selectedDirection = selectMovementDirection();
     if(selectedDirection !== null) {
         pl.movePlayer(selectedDirection[1], selectedDirection[2]);
