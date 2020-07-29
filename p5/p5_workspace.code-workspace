@@ -1,27 +1,7 @@
 {
 	"folders": [
 		{
-			"path": "shapes"
-		},
-		{
-			"path": "landscape"
-		},
-		{
 			"path": "."
-		},
-		{
-			"path": "colors"
-		},
-		{
-			"path": "p5"
-		},
-		{
-			"path": "noise"
-		},
-		{
-			"path": "plants"
 		}
-	],
-	"settings": {
-	}
+	]
 }
