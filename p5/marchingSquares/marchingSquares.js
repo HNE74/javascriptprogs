@@ -4,12 +4,12 @@
  */
 const width = 800;
 const height = 600;
-const rez = 8;
+const rez = 5;
 const noiseInc = 0.1;
 const cols = 1 + width / rez;
 const rows = 1 + height / rez;
 const field = new Array(cols).fill(null).map(()=>new Array(rows).fill(0));
-const zoffInc = 0.005;
+const zoffInc = 0.008;
 let zoff = 0;
 
 function setup() {
@@ -33,12 +33,21 @@ function draw() {
 
   generateFieldValues();
   //drawSquarePoints();
-
-  stroke(0);
+  drawSquareRects();
+  stroke(255);
   strokeWeight(1);
   drawSquareSeparationLines();
 }
 
+function drawSquareRects() {
+  for(let i=0; i<cols; i++) {
+    for(let j=0; j<rows; j++) {
+      fill(field[i][j]*255);
+      noStroke();
+      rect(i*rez, j*rez, rez, rez);
+    }
+  }  
+}
 
 function drawSquarePoints() {
   for(let i=0; i<cols; i++) {
