@@ -4,7 +4,7 @@
  */
 const width = 800;
 const height = 600;
-const rez = 20;
+const rez = 100;
 const noiseInc = 0.1;
 const cols = 1 + width / rez;
 const rows = 1 + height / rez;
@@ -80,48 +80,48 @@ function drawSquareSeparationLines() {
         Math.ceil(field[i][j+1])); 
       switch(state) {
         case 1:
-          drawLine(c, d);
+          drawLine(c, d, i, j, true);
           break;
         case 2:
-          drawLine(b, c);
+          drawLine(b, c, i, j, true);
           break;    
         case 3:
-          drawLine(b, d);
+          drawLine(b, d, i, j, true);
           break; 
         case 4:
-          drawLine(a, b);
+          drawLine(a, b, i, j, true);
           break;
         case 5:
-          drawLine(a, d);
-          drawLine(b, c);          
+          drawLine(a, d, i, j, true);
+          drawLine(b, c, i, j, true);          
           break;    
         case 6:
-          drawLine(a, c);
+          drawLine(a, c, i, j, true);
           break; 
         case 7:
-          drawLine(a, d);
+          drawLine(a, d, i, j, true);
           break;
         case 8:
-          drawLine(a, d);
+          drawLine(a, d, i, j, true);
           break;    
         case 9:
-          drawLine(a, c);
+          drawLine(a, c, i, j, true);
           break; 
         case 10:
-          drawLine(a, b);
-          drawLine(c, d);          
+          drawLine(a, b, i, j, true);
+          drawLine(c, d, i, j, true);          
           break;
         case 11:
-          drawLine(a, b);
+          drawLine(a, b, i, j, true);
           break;    
         case 12:
-          drawLine(b, d);
+          drawLine(b, d, i, j, true);
           break; 
         case 13:
-          drawLine(b, c);
+          drawLine(b, c, i, j, true);
           break;    
         case 14:
-          drawLine(c, d);
+          drawLine(c, d, i, j, true);
           break;                                    
         default:
           break;
@@ -130,18 +130,30 @@ function drawSquareSeparationLines() {
   }  
 }
 
-function drawLine(v1, v2, doInterpolate) {
+function drawLine(v1, v2, col, row, doInterpolate) {
   let p1x = v1['xp'];
   let p1y = v1['yp'];
   let p2x = v2['xp'];
   let p2y = v2['yp'];
 
-  if(doInterpolate) {
-    // TODO
+  if(doInterpolate) {   
+    if(p1y >= p2y) {
+      let v1 = field[col][row];   
+      let v2 = field[col][row+1];
+      p1y = linearInterpolation(v1, v2, p1y);
+    }
+    if(p2x >= p1x) {
+      let v1 = field[col][row];   
+      let v2 = field[col+1][row];
+      p2x = linearInterpolation(v1, v2, p1x);      
+    }
   }
-  else {
-    line(p1x, p1y, p2x, p2y);
-  }
+  
+  line(p1x, p1y, p2x, p2y);
+}
+
+function linearInterpolation(v1, v2, offset) {
+  return v1 / (v1 - v2) * rez + offset;
 }
  
 function getState(a, b, c, d) {
