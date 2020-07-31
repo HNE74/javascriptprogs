@@ -4,7 +4,7 @@
  */
 const width = 800;
 const height = 600;
-const rez = 50;
+const rez = 10;
 const noiseInc = 0.1;
 const cols = 1 + width / rez;
 const rows = 1 + height / rez;
@@ -25,7 +25,7 @@ function generateFieldValues() {  let yoff = 0;
       field[i][j] = noise(xoff, yoff, zoff)*2-1;
     }
   }
-  //zoff += zoffInc;
+  zoff += zoffInc;
 }
 
 function draw() {
@@ -33,7 +33,7 @@ function draw() {
 
   generateFieldValues();
   drawSquareRects(false);
-  drawSquarePoints();
+  drawSquarePoints(false);
 
   stroke(25);
   strokeWeight(1);
@@ -49,13 +49,16 @@ function drawSquareRects(doFill) {
         noStroke();
       } 
       else {
-        stroke(0);
+        stroke(255);
       }
     }
   }  
 }
 
-function drawSquarePoints() {
+function drawSquarePoints(doDraw) {
+  if(!doDraw) {
+    return;
+  }
   for(let i=0; i<cols; i++) {
     for(let j=0; j<rows; j++) {
       stroke(field[i][j]*255);
@@ -78,25 +81,21 @@ function drawSquareSeparationLines() {
         Math.ceil(field[i+1][j]),
         Math.ceil(field[i+1][j+1]),
         Math.ceil(field[i][j+1])); 
+      a['xp'] = linearInterpolation(field[i][j], field[i+1][j], x);
+      b['yp'] = linearInterpolation(field[i+1][j], field[i+1][j+1], y);
+      c['xp'] = linearInterpolation(field[i][j+1], field[i+1][j+1], x);
+      d['yp'] = linearInterpolation(field[i][j], field[i][j+1], y);
       switch(state) {
         case 1:
-          d['yp'] = linearInterpolation(field[i][j], field[i][j+1], y);
-          c['xp'] = linearInterpolation(field[i][j+1], field[i+1][j+1], x);
           drawLine(c, d, i, j);
           break;
         case 2:
-          b['yp'] = linearInterpolation(field[i+1][j], field[i+1][j+1], y);
-          c['xp'] = linearInterpolation(field[i][j+1], field[i+1][j+1], x);
           drawLine(b, c, i, j);
           break;    
         case 3:
-          b['yp'] = linearInterpolation(field[i+1][j], field[i+1][j+1], y);
-          d['yp'] = linearInterpolation(field[i][j], field[i][j+1], y);
           drawLine(b, d, i, j);
           break; 
         case 4:
-          a['xp'] = linearInterpolation(field[i+][j], field[i+1][j], x);
-          b['yp'] = linearInterpolation(field[i+1][j], field[i+1][j+1], y);
           drawLine(a, b, i, j);
           break;
         case 5:
