@@ -4,7 +4,7 @@
  */
 const width = 800;
 const height = 600;
-const rez = 5;
+const rez = 20;
 const noiseInc = 0.1;
 const cols = 1 + width / rez;
 const rows = 1 + height / rez;
@@ -25,26 +25,32 @@ function generateFieldValues() {  let yoff = 0;
       field[i][j] = noise(xoff, yoff, zoff)*2-1;
     }
   }
-  zoff += zoffInc;
+  //zoff += zoffInc;
 }
 
 function draw() {
   background(127);
 
   generateFieldValues();
-  //drawSquarePoints();
-  drawSquareRects();
-  stroke(255);
+  drawSquareRects(false);
+  drawSquarePoints();
+
+  stroke(25);
   strokeWeight(1);
   drawSquareSeparationLines();
 }
 
-function drawSquareRects() {
+function drawSquareRects(doFill) {
   for(let i=0; i<cols; i++) {
     for(let j=0; j<rows; j++) {
-      fill(field[i][j]*255);
-      noStroke();
-      rect(i*rez, j*rez, rez, rez);
+      rect(i*rez, j*rez, rez, rez);      
+      if(doFill) {
+        fill(field[i][j]*255);
+        noStroke();
+      } 
+      else {
+        stroke(0);
+      }
     }
   }  
 }
@@ -53,7 +59,7 @@ function drawSquarePoints() {
   for(let i=0; i<cols; i++) {
     for(let j=0; j<rows; j++) {
       stroke(field[i][j]*255);
-      strokeWeight(rez*0.2)
+      strokeWeight(rez*0.3)
       point(i*rez, j*rez);
     }
   }  
@@ -124,8 +130,18 @@ function drawSquareSeparationLines() {
   }  
 }
 
-function drawLine(v1, v2) {
-  line(v1['xp'], v1['yp'], v2['xp'], v2['yp']);
+function drawLine(v1, v2, doInterpolate) {
+  let p1x = v1['xp'];
+  let p1y = v1['yp'];
+  let p2x = v2['xp'];
+  let p2y = v2['yp'];
+
+  if(doInterpolate) {
+    // TODO
+  }
+  else {
+    line(p1x, p1y, p2x, p2y);
+  }
 }
  
 function getState(a, b, c, d) {
