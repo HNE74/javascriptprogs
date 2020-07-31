@@ -4,7 +4,7 @@
  */
 const width = 800;
 const height = 600;
-const rez = 100;
+const rez = 50;
 const noiseInc = 0.1;
 const cols = 1 + width / rez;
 const rows = 1 + height / rez;
@@ -80,48 +80,56 @@ function drawSquareSeparationLines() {
         Math.ceil(field[i][j+1])); 
       switch(state) {
         case 1:
-          drawLine(c, d, i, j, true);
+          d['yp'] = linearInterpolation(field[i][j], field[i][j+1], y);
+          c['xp'] = linearInterpolation(field[i][j+1], field[i+1][j+1], x);
+          drawLine(c, d, i, j);
           break;
         case 2:
-          drawLine(b, c, i, j, true);
+          b['yp'] = linearInterpolation(field[i+1][j], field[i+1][j+1], y);
+          c['xp'] = linearInterpolation(field[i][j+1], field[i+1][j+1], x);
+          drawLine(b, c, i, j);
           break;    
         case 3:
-          drawLine(b, d, i, j, true);
+          b['yp'] = linearInterpolation(field[i+1][j], field[i+1][j+1], y);
+          d['yp'] = linearInterpolation(field[i][j], field[i][j+1], y);
+          drawLine(b, d, i, j);
           break; 
         case 4:
-          drawLine(a, b, i, j, true);
+          a['xp'] = linearInterpolation(field[i+][j], field[i+1][j], x);
+          b['yp'] = linearInterpolation(field[i+1][j], field[i+1][j+1], y);
+          drawLine(a, b, i, j);
           break;
         case 5:
-          drawLine(a, d, i, j, true);
-          drawLine(b, c, i, j, true);          
+          drawLine(a, d, i, j);
+          drawLine(b, c, i, j);          
           break;    
         case 6:
-          drawLine(a, c, i, j, true);
+          drawLine(a, c, i, j);
           break; 
         case 7:
-          drawLine(a, d, i, j, true);
+          drawLine(a, d, i, j);
           break;
         case 8:
-          drawLine(a, d, i, j, true);
+          drawLine(a, d, i, j);
           break;    
         case 9:
-          drawLine(a, c, i, j, true);
+          drawLine(a, c, i, j);
           break; 
         case 10:
-          drawLine(a, b, i, j, true);
-          drawLine(c, d, i, j, true);          
+          drawLine(a, b, i, j);
+          drawLine(c, d, i, j);          
           break;
         case 11:
-          drawLine(a, b, i, j, true);
+          drawLine(a, b, i, j);
           break;    
         case 12:
-          drawLine(b, d, i, j, true);
+          drawLine(b, d, i, j);
           break; 
         case 13:
-          drawLine(b, c, i, j, true);
+          drawLine(b, c, i, j);
           break;    
         case 14:
-          drawLine(c, d, i, j, true);
+          drawLine(c, d, i, j);
           break;                                    
         default:
           break;
@@ -130,25 +138,11 @@ function drawSquareSeparationLines() {
   }  
 }
 
-function drawLine(v1, v2, col, row, doInterpolate) {
+function drawLine(v1, v2, col, row) {
   let p1x = v1['xp'];
   let p1y = v1['yp'];
   let p2x = v2['xp'];
   let p2y = v2['yp'];
-
-  if(doInterpolate) {   
-    if(p1y >= p2y) {
-      let v1 = field[col][row];   
-      let v2 = field[col][row+1];
-      p1y = linearInterpolation(v1, v2, p1y);
-    }
-    if(p2x >= p1x) {
-      let v1 = field[col][row];   
-      let v2 = field[col+1][row];
-      p2x = linearInterpolation(v1, v2, p1x);      
-    }
-  }
-  
   line(p1x, p1y, p2x, p2y);
 }
 
