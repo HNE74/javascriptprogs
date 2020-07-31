@@ -16,36 +16,42 @@ function setup() {
   createCanvas(width, height);
 }
 
+/** 
+ *
+ */ 
 function generateFieldValues() {  let yoff = 0;
   for(let i=0; i<cols; i++) {
     yoff += noiseInc;
     let xoff = 0;
     for(let j=0; j<rows; j++) {
       xoff += noiseInc;
-      field[i][j] = noise(xoff, yoff, zoff)*2-1;
+      field[i][j] = map(noise(xoff, yoff, zoff), 0, 1, -1, 1);
     }
   }
   zoff += zoffInc;
 }
 
 function draw() {
-  background(127);
+  background(1);
 
   generateFieldValues();
-  drawSquareRects(false);
-  drawSquarePoints(false);
+  drawSquareRects(false, false);
+  drawSquarePoints(true);
 
-  stroke(25);
+  stroke(255);
   strokeWeight(1);
-  drawSquareSeparationLines();
+  drawSquareSeparationLines(true);
 }
 
-function drawSquareRects(doFill) {
+function drawSquareRects(doDraw, doFill) {
+  if(!doDraw) {
+    return;
+  }
   for(let i=0; i<cols; i++) {
     for(let j=0; j<rows; j++) {
       rect(i*rez, j*rez, rez, rez);      
       if(doFill) {
-        fill(field[i][j]*255);
+        fill(map(field[i][j], -1, 1, 0, 1) * 255);
         noStroke();
       } 
       else {
@@ -61,14 +67,14 @@ function drawSquarePoints(doDraw) {
   }
   for(let i=0; i<cols; i++) {
     for(let j=0; j<rows; j++) {
-      stroke(field[i][j]*255);
+      stroke(map(field[i][j], -1, 1, 0, 1) * 255);
       strokeWeight(rez*0.3)
       point(i*rez, j*rez);
     }
   }  
 }
 
-function drawSquareSeparationLines() {
+function drawSquareSeparationLines(doInterpolate) {
   for(let i=0; i<cols-1; i++) {
     for(let j=0; j<rows-1; j++) {
       let x = i * rez;
@@ -81,60 +87,70 @@ function drawSquareSeparationLines() {
         Math.ceil(field[i+1][j]),
         Math.ceil(field[i+1][j+1]),
         Math.ceil(field[i][j+1])); 
-      a['xp'] = linearInterpolation(field[i][j], field[i+1][j], x);
-      b['yp'] = linearInterpolation(field[i+1][j], field[i+1][j+1], y);
-      c['xp'] = linearInterpolation(field[i][j+1], field[i+1][j+1], x);
-      d['yp'] = linearInterpolation(field[i][j], field[i][j+1], y);
-      switch(state) {
-        case 1:
-          drawLine(c, d, i, j);
-          break;
-        case 2:
-          drawLine(b, c, i, j);
-          break;    
-        case 3:
-          drawLine(b, d, i, j);
-          break; 
-        case 4:
-          drawLine(a, b, i, j);
-          break;
-        case 5:
-          drawLine(a, d, i, j);
-          drawLine(b, c, i, j);          
-          break;    
-        case 6:
-          drawLine(a, c, i, j);
-          break; 
-        case 7:
-          drawLine(a, d, i, j);
-          break;
-        case 8:
-          drawLine(a, d, i, j);
-          break;    
-        case 9:
-          drawLine(a, c, i, j);
-          break; 
-        case 10:
-          drawLine(a, b, i, j);
-          drawLine(c, d, i, j);          
-          break;
-        case 11:
-          drawLine(a, b, i, j);
-          break;    
-        case 12:
-          drawLine(b, d, i, j);
-          break; 
-        case 13:
-          drawLine(b, c, i, j);
-          break;    
-        case 14:
-          drawLine(c, d, i, j);
-          break;                                    
-        default:
-          break;
-      }       
+      if(doInterpolate) {
+        interpolateBorderVertexes(a, b, c, d, i, j, x, y);
+      }
+      drawSeparationLine(state, a, b, c, d, i, j);
     }
   }  
+}
+
+function drawSeparationLine(state, a, b, c, d, i, j) {
+  switch(state) {
+    case 1:
+      drawLine(c, d, i, j);
+      break;
+    case 2:
+      drawLine(b, c, i, j);
+      break;    
+    case 3:
+      drawLine(b, d, i, j);
+      break; 
+    case 4:
+      drawLine(a, b, i, j);
+      break;
+    case 5:
+      drawLine(a, d, i, j);
+      drawLine(b, c, i, j);          
+      break;    
+    case 6:
+      drawLine(a, c, i, j);
+      break; 
+    case 7:
+      drawLine(a, d, i, j);
+      break;
+    case 8:
+      drawLine(a, d, i, j);
+      break;    
+    case 9:
+      drawLine(a, c, i, j);
+      break; 
+    case 10:
+      drawLine(a, b, i, j);
+      drawLine(c, d, i, j);          
+      break;
+    case 11:
+      drawLine(a, b, i, j);
+      break;    
+    case 12:
+      drawLine(b, d, i, j);
+      break; 
+    case 13:
+      drawLine(b, c, i, j);
+      break;    
+    case 14:
+      drawLine(c, d, i, j);
+      break;                                    
+    default:
+      break;
+  }       
+}
+ 
+function interpolateBorderVertexes(a, b, c, d, i, j, x, y) {
+  a['xp'] = linearInterpolation(field[i][j], field[i+1][j], x);
+  b['yp'] = linearInterpolation(field[i+1][j], field[i+1][j+1], y);
+  c['xp'] = linearInterpolation(field[i][j+1], field[i+1][j+1], x);
+  d['yp'] = linearInterpolation(field[i][j], field[i][j+1], y);
 }
 
 function drawLine(v1, v2, col, row) {
