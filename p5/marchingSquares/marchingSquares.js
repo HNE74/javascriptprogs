@@ -12,25 +12,16 @@ const field = new Array(cols).fill(null).map(()=>new Array(rows).fill(0));
 const zoffInc = 0.008;
 let zoff = 0;
 
+/**
+ * Called on initialization.
+ */
 function setup() {
   createCanvas(width, height);
 }
 
-/** 
- *
- */ 
-function generateFieldValues() {  let yoff = 0;
-  for(let i=0; i<cols; i++) {
-    yoff += noiseInc;
-    let xoff = 0;
-    for(let j=0; j<rows; j++) {
-      xoff += noiseInc;
-      field[i][j] = map(noise(xoff, yoff, zoff), 0, 1, -1, 1);
-    }
-  }
-  zoff += zoffInc;
-}
-
+/**
+ * Draws frame to canvas.
+ */
 function draw() {
   background(1);
 
@@ -43,6 +34,24 @@ function draw() {
   drawSquareSeparationLines(true);
 }
 
+/** 
+ * Generates field values between -1 and 1 using the P5 inbuild noise function.
+ */
+function generateFieldValues() {  let yoff = 0;
+  for(let i=0; i<cols; i++) {
+    yoff += noiseInc;
+    let xoff = 0;
+    for(let j=0; j<rows; j++) {
+      xoff += noiseInc;
+      field[i][j] = map(noise(xoff, yoff, zoff), 0, 1, -1, 1);
+    }
+  }
+  zoff += zoffInc;
+}
+
+/**
+ * Draws square rectangles.
+ */
 function drawSquareRects(doDraw, doFill) {
   if(!doDraw) {
     return;
@@ -61,6 +70,10 @@ function drawSquareRects(doDraw, doFill) {
   }  
 }
 
+/**
+ * Draws square vertex points with grey scale color derived from 
+ * corresponding field value.
+ */
 function drawSquarePoints(doDraw) {
   if(!doDraw) {
     return;
@@ -74,6 +87,10 @@ function drawSquarePoints(doDraw) {
   }  
 }
 
+/**
+ * Draws square point separation lines using the marching squares algorithm.
+ * Line vertexes might be subject to linear interpolation.
+ */
 function drawSquareSeparationLines(doInterpolate) {
   for(let i=0; i<cols-1; i++) {
     for(let j=0; j<rows-1; j++) {
@@ -88,72 +105,82 @@ function drawSquareSeparationLines(doInterpolate) {
         Math.ceil(field[i+1][j+1]),
         Math.ceil(field[i][j+1])); 
       if(doInterpolate) {
-        interpolateBorderVertexes(a, b, c, d, i, j, x, y);
+        interpolateBorderVertices(a, b, c, d, i, j, x, y);
       }
       drawSeparationLine(state, a, b, c, d, i, j);
     }
   }  
 }
 
-function drawSeparationLine(state, a, b, c, d, i, j) {
+/**
+ * Draws separation line within a square according to passed state.
+ */
+function drawSeparationLine(state, a, b, c, d) {
   switch(state) {
     case 1:
-      drawLine(c, d, i, j);
+      drawLine(c, d);
       break;
     case 2:
-      drawLine(b, c, i, j);
+      drawLine(b, c);
       break;    
     case 3:
-      drawLine(b, d, i, j);
+      drawLine(b, d);
       break; 
     case 4:
-      drawLine(a, b, i, j);
+      drawLine(a, b);
       break;
     case 5:
-      drawLine(a, d, i, j);
-      drawLine(b, c, i, j);          
+      drawLine(a, d);
+      drawLine(b, c);          
       break;    
     case 6:
-      drawLine(a, c, i, j);
+      drawLine(a, c);
       break; 
     case 7:
-      drawLine(a, d, i, j);
+      drawLine(a, d);
       break;
     case 8:
-      drawLine(a, d, i, j);
+      drawLine(a, d);
       break;    
     case 9:
-      drawLine(a, c, i, j);
+      drawLine(a, c);
       break; 
     case 10:
-      drawLine(a, b, i, j);
-      drawLine(c, d, i, j);          
+      drawLine(a, b);
+      drawLine(c, d);          
       break;
     case 11:
-      drawLine(a, b, i, j);
+      drawLine(a, b);
       break;    
     case 12:
-      drawLine(b, d, i, j);
+      drawLine(b, d);
       break; 
     case 13:
-      drawLine(b, c, i, j);
+      drawLine(b, c);
       break;    
     case 14:
-      drawLine(c, d, i, j);
+      drawLine(c, d);
       break;                                    
     default:
       break;
   }       
 }
- 
-function interpolateBorderVertexes(a, b, c, d, i, j, x, y) {
+
+/**
+ * Linear interpolation of border line vertices based on field values of the
+ * corresponding square vertices.
+ */
+function interpolateBorderVertices(a, b, c, d, i, j, x, y) {
   a['xp'] = linearInterpolation(field[i][j], field[i+1][j], x);
   b['yp'] = linearInterpolation(field[i+1][j], field[i+1][j+1], y);
   c['xp'] = linearInterpolation(field[i][j+1], field[i+1][j+1], x);
   d['yp'] = linearInterpolation(field[i][j], field[i][j+1], y);
 }
 
-function drawLine(v1, v2, col, row) {
+/**
+ * Draws a line from v1 to v2.
+ */
+function drawLine(v1, v2) {
   let p1x = v1['xp'];
   let p1y = v1['yp'];
   let p2x = v2['xp'];
@@ -161,16 +188,17 @@ function drawLine(v1, v2, col, row) {
   line(p1x, p1y, p2x, p2y);
 }
 
+/**
+ * Linear interpolation of coordinate component.
+ */
 function linearInterpolation(v1, v2, offset) {
   return v1 / (v1 - v2) * rez + offset;
 }
- 
+
+/**
+ * Derive state from binary encoding of square vertices.
+ */
 function getState(a, b, c, d) {
   return a * 8 + b * 4 + c * 2 + d * 1; 
 }
 
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
