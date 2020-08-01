@@ -125,6 +125,9 @@ function getState(av, bv, cv, dv, isoval, range) {
   return a * 8 + b * 4 + c * 2 + d * 1; 
 }
 
+/**
+ * Maps the provided invalue to one between 0 and 1.
+ */
 function mapValue(inval, minval, maxval) {
   let v = 0;
   if(inval < minval) {
