@@ -104,10 +104,12 @@ function drawSquareSeparationLines(doInterpolate) {
         Math.ceil(field[i+1][j]),
         Math.ceil(field[i+1][j+1]),
         Math.ceil(field[i][j+1])); 
-      if(doInterpolate) {
-        interpolateBorderVertices(a, b, c, d, i, j, x, y);
+      if(state >=1 && state <= 14) {
+        if(doInterpolate) {
+          interpolateBorderVertices(a, b, c, d, i, j, x, y);
+        }
+        drawSeparationLine(state, a, b, c, d, i, j);
       }
-      drawSeparationLine(state, a, b, c, d, i, j);
     }
   }  
 }
