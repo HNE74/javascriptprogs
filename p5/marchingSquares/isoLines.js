@@ -4,7 +4,7 @@
  */
 const width = 800;
 const height = 600;
-const rez = 20;
+const rez = 40;
 const noiseInc = 0.1;
 const cols = 1 + width / rez;
 const rows = 1 + height / rez;
@@ -34,10 +34,11 @@ function draw() {
 
   stroke(1);
   strokeWeight(1);
+ // drawIsoLine(50, 10, true);
   for(isoVal = fieldMinVal+isoRange; isoVal <= fieldMaxVal-isoRange; isoVal += isoRange) {
     drawIsoLine(isoVal, isoRange, true);
   }
-  zoff++;
+  //zoff++;
 }
 
 /** 
@@ -103,10 +104,12 @@ function drawIsoLine(isoVal, isoRange, doInterpolate) {
       let c = { xp: x + rez*0.5,  yp: y+rez };
       let d = { xp: x,  yp: y + rez*0.5 }; 
       let state = getState(field[i][j], field[i+1][j], field[i+1][j+1], field[i][j+1], isoVal, isoRange); 
-     // if(doInterpolate) {
-     //   interpolateBorderVertices(a, b, c, d, i, j, x, y);
-     // }
-      drawSeparationLine(state, a, b, c, d, i, j);
+      if(state >= 1 && state <= 14) {
+        if(doInterpolate) {
+          interpolateBorderVertices(a, b, c, d, i, j, x, y, isoVal, isoRange);
+        }
+        drawSeparationLine(state, a, b, c, d, i, j);
+      }
     }
   }  
 }
@@ -126,7 +129,7 @@ function getState(av, bv, cv, dv, isoval, range) {
 }
 
 /**
- * Maps the provided invalue to one between 0 and 1.
+ * Maps the provided invalue to one between 0 and 1
  */
 function mapValue(inval, minval, maxval) {
   let v = 0;
@@ -201,11 +204,17 @@ function drawSeparationLine(state, a, b, c, d) {
  * Linear interpolation of border line vertices based on field values of the
  * corresponding square vertices.
  */
-function interpolateBorderVertices(a, b, c, d, i, j, x, y) {
-  a['xp'] = linearInterpolation(field[i][j], field[i+1][j], x);
-  b['yp'] = linearInterpolation(field[i+1][j], field[i+1][j+1], y);
-  c['xp'] = linearInterpolation(field[i][j+1], field[i+1][j+1], x);
-  d['yp'] = linearInterpolation(field[i][j], field[i][j+1], y);
+function interpolateBorderVertices(a, b, c, d, i, j, x, y, isoval, range) {
+  let minval = isoval - range / 2;
+  let maxval = isoval + range / 2;  
+  let va = map(field[i][j], minval, maxval, 0, 1);
+  let vb = map(field[i+1][j], minval, maxval, 0, 1);
+  let vc = map(field[i+1][j+1], minval, maxval, 0, 1);
+  let vd = map(field[i][j+1], minval, maxval, 0, 1);
+  a['xp'] = linearInterpolation(va, vb, x);
+  b['yp'] = linearInterpolation(vb, vc, y);
+  c['xp'] = linearInterpolation(vd, vc, x);
+  d['yp'] = linearInterpolation(va, vd, y); 
 }
 
 /**
