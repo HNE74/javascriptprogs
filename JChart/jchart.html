@@ -3,25 +3,66 @@
   <head>
     <meta charset="utf-8">
     <title>JChart</title>
+    <script src="http://localhost:5500/2.9.4_dist_Chart.min.js"></script>
   </head>
   <body>
+    <canvas id="chart" width="800" height="400"></canvas>
     <script>
+    // See coding train: https://www.youtube.com/watch?v=RfMkdvN-23o&t=400s
     // CSV file from: https://data.giss.nasa.gov/gistemp/
     // File provided by Visual Studio Code extension Live Server.
+    chartget();
+    async function chartget() {
+    const fdata = await getData();
+    var ctx = document.getElementById('chart').getContext('2d');
+    var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: fdata.xlabels,
+        datasets: [{
+            label: 'Global average temperature',
+            data: fdata.ytemps,
+            fill: false, 
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    // Include a dollar sign in the ticks
+                    callback: function(value, index, values) {
+                        return value + '°';
+                    }
+                }
+            }]
+        }
+    }
+});
+    }
+    
     async function getData() {
       const response = await fetch('http://localhost:5500/ZonAnn.Ts+dSST.csv');
       const data = await response.text();
       const rows = data.trim().split('\n').slice(1);
-      
+      const xlabels = [];
+      const ytemps = [];
       rows.forEach(elt => {
         const row = elt.split(',');
         const year = row[0];
+        xlabels.push(year);
         const temp = row[1];
-        console.log(year + ',' + temp);
+        ytemps.push(parseFloat(temp));
       })
-    }
 
-    getData();
+      return { xlabels, ytemps }
+    }
     </script>    
   </body>
 </html>
