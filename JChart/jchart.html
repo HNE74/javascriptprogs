@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <title>JChart</title>
+  </head>
+  <body>
+    <script>
+    // CSV file from: https://data.giss.nasa.gov/gistemp/
+    // File provided by Visual Studio Code extension Live Server.
+    async function getData() {
+      const response = await fetch('http://localhost:5500/ZonAnn.Ts+dSST.csv');
+      const data = await response.text();
+      const rows = data.trim().split('\n').slice(1);
+      
+      rows.forEach(elt => {
+        const row = elt.split(',');
+        const year = row[0];
+        const temp = row[1];
+        console.log(year + ',' + temp);
+      })
+    }
+
+    getData();
+    </script>    
+  </body>
+</html>
