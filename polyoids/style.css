@@ -1,0 +1,18 @@
+body {
+    margin:0;
+    background: darkgray;
+    overflow: hidden;
+    text-align: center;
+}
+
+#gameCanvas{
+    background: black;
+}
+
+div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+  }
